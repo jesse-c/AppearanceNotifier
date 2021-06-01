@@ -27,14 +27,24 @@ class DarkModeObserver {
         print("\(Date()) Theme changed: \(style)")
 
         do {
+            let output = try shellOut(to: "nvr", arguments: ["--serverlist"])
+            print(output)
+            let b = output.split(whereSeparator: \.isNewline)
+            print(b)
+
+            try b.forEach { c in
+                print(c)
+                try shellOut(to: "nvr", arguments: ["--servername", String(c), "+'set background=\(style.rawValue.lowercased())'"])
+            }
+
             switch style {
             case .Light:
-                let output = try shellOut(to: "kitty", arguments: [
+                try shellOut(to: "kitty", arguments: [
                     "@", "--to", "unix:/tmp/kitty", "set-colors", "--all", "--configured", "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-light.conf",
 
                 ])
             case .Dark:
-                let output = try shellOut(to: "kitty", arguments: [
+                try shellOut(to: "kitty", arguments: [
                     "@", "--to", "unix:/tmp/kitty", "set-colors", "--all", "--configured", "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-dark.conf",
 
                 ])
