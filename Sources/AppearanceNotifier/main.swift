@@ -27,8 +27,18 @@ class DarkModeObserver {
         print("\(Date()) Theme changed: \(style)")
 
         do {
-            let output = try shellOut(to: "echo", arguments: ["Hello world"])
-            print(output) // Hello world
+            switch style {
+            case .Light:
+                let output = try shellOut(to: "kitty", arguments: [
+                    "@", "--to", "unix:/tmp/kitty", "set-colors", "--all", "--configured", "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-light.conf",
+
+                ])
+            case .Dark:
+                let output = try shellOut(to: "kitty", arguments: [
+                    "@", "--to", "unix:/tmp/kitty", "set-colors", "--all", "--configured", "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-dark.conf",
+
+                ])
+            }
         } catch {
             let error = error as! ShellOutError
             print(error.message) // Prints STDERR
