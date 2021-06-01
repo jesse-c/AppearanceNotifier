@@ -24,7 +24,7 @@ class DarkModeObserver {
         let styleRaw = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") ?? "Light"
         let style = Theme(rawValue: styleRaw)!
 
-        print("Theme changed: \(style)")
+        print("\(Date()) Theme changed: \(style)")
 
         do {
             let output = try shellOut(to: "echo", arguments: ["Hello world"])
