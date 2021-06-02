@@ -30,17 +30,21 @@ class DarkModeObserver {
             let output = try shellOut(to: "nvr", arguments: ["--serverlist"])
             let servers = output.split(whereSeparator: \.isNewline)
 
-            servers.forEach { server in
-                print("\(Date()) server \(String(server)): sending command")
+            if servers.isEmpty {
+                print("\(Date()) no servers")
+            } else {
+                servers.forEach { server in
+                    print("\(Date()) server \(String(server)): sending command")
 
-                DispatchQueue.global().async {
-                    do {
-                        try shellOut(
-                            to: "nvr",
-                            arguments: ["--servername", String(server), "+'set background=\(style.rawValue.lowercased())'"]
-                        )
-                    } catch {
-                        print("\(Date()) server \(String(server)): command failed")
+                    DispatchQueue.global().async {
+                        do {
+                            try shellOut(
+                                to: "nvr",
+                                arguments: ["--servername", String(server), "+'set background=\(style.rawValue.lowercased())'"]
+                            )
+                        } catch {
+                            print("\(Date()) server \(String(server)): command failed")
+                        }
                     }
                 }
             }
