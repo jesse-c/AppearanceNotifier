@@ -28,26 +28,50 @@ class DarkModeObserver {
 
         do {
             let output = try shellOut(to: "nvr", arguments: ["--serverlist"])
-            print(output)
-            let b = output.split(whereSeparator: \.isNewline)
-            print(b)
+            let servers = output.split(whereSeparator: \.isNewline)
 
-            try b.forEach { c in
-                print(c)
-                try shellOut(to: "nvr", arguments: ["--servername", String(c), "+'set background=\(style.rawValue.lowercased())'"])
+            servers.forEach { server in
+                print("\(Date()) server \(String(server)): sending command")
+
+                DispatchQueue.global().async {
+                    do {
+                        try shellOut(
+                            to: "nvr",
+                            arguments: ["--servername", String(server), "+'set background=\(style.rawValue.lowercased())'"]
+                        )
+                    } catch {
+                        print("\(Date()) server \(String(server)): command failed")
+                    }
+                }
             }
 
             switch style {
             case .Light:
-                try shellOut(to: "kitty", arguments: [
-                    "@", "--to", "unix:/tmp/kitty", "set-colors", "--all", "--configured", "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-light.conf",
+                DispatchQueue.global().async {
+                    print("\(Date()) kitty: sending command")
 
-                ])
+                    do {
+                        try shellOut(to: "kitty", arguments: [
+                            "@", "--to", "unix:/tmp/kitty", "set-colors", "--all", "--configured", "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-light.conf",
+
+                        ])
+                    } catch {
+                        print("\(Date()) kitty: command failed")
+                    }
+                }
             case .Dark:
-                try shellOut(to: "kitty", arguments: [
-                    "@", "--to", "unix:/tmp/kitty", "set-colors", "--all", "--configured", "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-dark.conf",
+                DispatchQueue.global().async {
+                    print("\(Date()) kitty: sending command")
 
-                ])
+                    do {
+                        try shellOut(to: "kitty", arguments: [
+                            "@", "--to", "unix:/tmp/kitty", "set-colors", "--all", "--configured", "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-dark.conf",
+
+                        ])
+                    } catch {
+                        print("\(Date()) kitty: command failed")
+                    }
+                }
             }
         } catch {
             let error = error as! ShellOutError
