@@ -21,66 +21,74 @@ class DarkModeObserver {
     }
 
     func interfaceModeChanged(notification _: Notification) {
-        let styleRaw = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") ?? "Light"
-        let style = Theme(rawValue: styleRaw)!
+        let themeRaw = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") ?? "Light"
+        let theme = Theme(rawValue: themeRaw)!
 
-        print("\(Date()) Theme changed: \(style)")
+        notify(theme: theme)
 
-        do {
-            let output = try shellOut(to: "nvr", arguments: ["--serverlist"])
-            let servers = output.split(whereSeparator: \.isNewline)
+        respond(theme: theme)
+    }
+}
 
-            if servers.isEmpty {
-                print("\(Date()) no servers")
-            } else {
-                servers.forEach { server in
-                    let server = String(server)
+func notify(theme: Theme) {
+    print("\(Date()) Theme changed: \(theme)")
+}
 
-                    print("\(Date()) server \(server): sending command")
+func respond(theme: Theme) {
+    do {
+        let output = try shellOut(to: "nvr", arguments: ["--serverlist"])
+        let servers = output.split(whereSeparator: \.isNewline)
 
-                    let arguments = build_nvim_background_arguments(server: server, theme: style)
+        if servers.isEmpty {
+            print("\(Date()) no servers")
+        } else {
+            servers.forEach { server in
+                let server = String(server)
 
-                    DispatchQueue.global().async {
-                        do {
-                            try shellOut(to: "nvr", arguments: arguments)
-                        } catch {
-                            print("\(Date()) server \(String(server)): command failed")
-                        }
+                print("\(Date()) server \(server): sending command")
+
+                let arguments = build_nvim_background_arguments(server: server, theme: theme)
+
+                DispatchQueue.global().async {
+                    do {
+                        try shellOut(to: "nvr", arguments: arguments)
+                    } catch {
+                        print("\(Date()) server \(String(server)): command failed")
                     }
                 }
             }
-
-            switch style {
-            case .Light:
-                DispatchQueue.global().async {
-                    print("\(Date()) kitty: sending command")
-
-                    let arguments = build_kitty_arguments(theme: "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-light.conf")
-
-                    do {
-                        try shellOut(to: "kitty", arguments: arguments)
-                    } catch {
-                        print("\(Date()) kitty: command failed")
-                    }
-                }
-            case .Dark:
-                DispatchQueue.global().async {
-                    print("\(Date()) kitty: sending command")
-
-                    let arguments = build_kitty_arguments(theme: "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-dark.conf")
-
-                    do {
-                        try shellOut(to: "kitty", arguments: arguments)
-                    } catch {
-                        print("\(Date()) kitty: command failed")
-                    }
-                }
-            }
-        } catch {
-            let error = error as! ShellOutError
-            print(error.message) // Prints STDERR
-            print(error.output) // Prints STDOUT
         }
+
+        switch theme {
+        case .Light:
+            DispatchQueue.global().async {
+                print("\(Date()) kitty: sending command")
+
+                let arguments = build_kitty_arguments(theme: "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-light.conf")
+
+                do {
+                    try shellOut(to: "kitty", arguments: arguments)
+                } catch {
+                    print("\(Date()) kitty: command failed")
+                }
+            }
+        case .Dark:
+            DispatchQueue.global().async {
+                print("\(Date()) kitty: sending command")
+
+                let arguments = build_kitty_arguments(theme: "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-dark.conf")
+
+                do {
+                    try shellOut(to: "kitty", arguments: arguments)
+                } catch {
+                    print("\(Date()) kitty: command failed")
+                }
+            }
+        }
+    } catch {
+        let error = error as! ShellOutError
+        print(error.message) // Prints STDERR
+        print(error.output) // Prints STDOUT
     }
 }
 
