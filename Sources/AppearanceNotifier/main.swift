@@ -34,14 +34,15 @@ class DarkModeObserver {
                 print("\(Date()) no servers")
             } else {
                 servers.forEach { server in
-                    print("\(Date()) server \(String(server)): sending command")
+                    let server = String(server)
+
+                    print("\(Date()) server \(server): sending command")
+
+                    let arguments = build_nvim_background_arguments(server: server, theme: style)
 
                     DispatchQueue.global().async {
                         do {
-                            try shellOut(
-                                to: "nvr",
-                                arguments: ["--servername", String(server), "+'set background=\(style.rawValue.lowercased())'"]
-                            )
+                            try shellOut(to: "nvr", arguments: arguments)
                         } catch {
                             print("\(Date()) server \(String(server)): command failed")
                         }
@@ -54,11 +55,10 @@ class DarkModeObserver {
                 DispatchQueue.global().async {
                     print("\(Date()) kitty: sending command")
 
-                    do {
-                        try shellOut(to: "kitty", arguments: [
-                            "@", "--to", "unix:/tmp/kitty", "set-colors", "--all", "--configured", "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-light.conf",
+                    let arguments = build_kitty_arguments(theme: "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-light.conf")
 
-                        ])
+                    do {
+                        try shellOut(to: "kitty", arguments: arguments)
                     } catch {
                         print("\(Date()) kitty: command failed")
                     }
@@ -67,11 +67,10 @@ class DarkModeObserver {
                 DispatchQueue.global().async {
                     print("\(Date()) kitty: sending command")
 
-                    do {
-                        try shellOut(to: "kitty", arguments: [
-                            "@", "--to", "unix:/tmp/kitty", "set-colors", "--all", "--configured", "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-dark.conf",
+                    let arguments = build_kitty_arguments(theme: "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-dark.conf")
 
-                        ])
+                    do {
+                        try shellOut(to: "kitty", arguments: arguments)
                     } catch {
                         print("\(Date()) kitty: command failed")
                     }
@@ -83,6 +82,16 @@ class DarkModeObserver {
             print(error.output) // Prints STDOUT
         }
     }
+}
+
+func build_nvim_background_arguments(server: String, theme: Theme) -> [String] {
+    return ["--servername", server, "+'set background=\(theme.rawValue.lowercased())'"]
+}
+
+func build_kitty_arguments(theme: String) -> [String] {
+    return [
+        "@", "--to", "unix:/tmp/kitty", "set-colors", "--all", "--configured", theme,
+    ]
 }
 
 let app = NSApplication.shared
