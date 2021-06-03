@@ -59,6 +59,30 @@ func respond(theme: Theme) {
             }
         }
 
+        DispatchQueue.global().async {
+            print("\(Date()) server: updating config")
+
+            let arguments = ["-E", "-i", "\"\"", "\"s/o.background = '[a-z]{4,5}'/o.background = '\(theme.rawValue.lowercased())'/g\"", "~/.config/nvim/lua/ui/init.lua"]
+
+            do {
+                try shellOut(to: "sed", arguments: arguments)
+            } catch {
+                print("\(Date()) server: config update failed")
+            }
+        }
+
+        DispatchQueue.global().async {
+            print("\(Date()) kitty: updating config")
+
+            let arguments = ["-E", "-i", "\"\"", "\"s/edge-[a-z]{4,5}/edge-\(theme.rawValue.lowercased())/g\"", "~/.config/kitty/conf/colours.conf"]
+
+            do {
+                try shellOut(to: "sed", arguments: arguments)
+            } catch {
+                print("\(Date()) kitty: config update failed")
+            }
+        }
+
         switch theme {
         case .Light:
             DispatchQueue.global().async {
