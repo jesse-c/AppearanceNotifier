@@ -8,17 +8,22 @@ Ideally the different things themselves would handle this themselves, as others 
 
 ## Installation
 
-Clone this repository.
+### Binaries
+
+1. Download the latest version from the Releases page.
+2. Move it to your path.
+
+### From source
+
+1. `$ git clone git@github.com:jesse-c/AppearanceNotifier.git`
+2. `$ swift build --configuration release`.
+3. `$ .build/x86_64-apple-macosx/release/AppearanceNotifier /usr/local/bin/`
 
 ## Usage
 
-In your terminal, navigate to the cloned repository and run:
+You'll need to adapt the `respond` function for your local machine's setup.
 
-```sh
-swift run
-```
-
-You'll need to leave this running.
+Run the compiled binary (e.g. `$ AppearanceNotifier`). You'll need to leave this running.
 
 ## Dependencies
 
@@ -49,12 +54,3 @@ If you're starting it from the application icon, you need to set the launch argu
 NB: If you don't open kitty directly from the application (for example, if you're using Raycast), then it won't pick up these launch arguments.
 
 NB: I haven't tested this with more than 1 kitty window.
-
-## Wishlist
-
-- [ ] Autostart: For example, [use launchctl](https://arslan.io/2021/02/15/automatic-dark-mode-for-terminal-applications/)
-- [ ] Use macOS OSLog
-- [ ] Add tests
-- [ ] Add native notifications
-- [ ] Change configuration files so new instances have the right themes
-- [ ] Move commands out of application
