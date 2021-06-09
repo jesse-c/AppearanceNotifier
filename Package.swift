@@ -4,6 +4,9 @@ import PackageDescription
 
 let package = Package(
     name: "AppearanceNotifier",
+    products: [
+        .executable(name: "AppearanceNotifier", targets: ["AppearanceNotifier"]),
+    ],
     dependencies: [
         .package(url: "https://github.com/JohnSundell/ShellOut.git", from: "2.0.0"),
     ],
