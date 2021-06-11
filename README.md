@@ -6,6 +6,12 @@ This application listens for when the macOS interface theme changes and then _do
 
 Ideally the different things themselves would handle this themselves, as others do.
 
+## Demo
+
+![appearancenotifier-demo-with-kitty-neovim](https://user-images.githubusercontent.com/1405676/121757359-d2b42700-cb0c-11eb-8db1-47d91aa5196c.gif)
+
+NB: This demo is from a 2012 13" MacBook Pro.
+
 ## Installation
 
 ### Binaries
@@ -54,3 +60,9 @@ If you're starting it from the application icon, you need to set the launch argu
 NB: If you don't open kitty directly from the application (for example, if you're using Raycast), then it won't pick up these launch arguments.
 
 NB: I haven't tested this with more than 1 kitty window.
+
+## FAQ
+
+Q. What if my laptop is asleep and it passes sunrise/sunset?
+
+A. From what I've observed, my laptop has already switched, or does so immediately after I directly wake it up.
