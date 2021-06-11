@@ -8,7 +8,7 @@ enum Theme: String {
     case Light, Dark
 }
 
-class DarkModeObserver {
+class ThemeChangeObserver {
     func observe() {
         print("Observing")
 
@@ -130,7 +130,7 @@ let app = NSApplication.shared
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_: Notification) {
-        let observer = DarkModeObserver()
+        let observer = ThemeChangeObserver()
         observer.observe()
     }
 }
