@@ -8,7 +8,7 @@ let package = Package(
         .executable(name: "AppearanceNotifier", targets: ["AppearanceNotifier"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/JohnSundell/ShellOut.git", from: "2.0.0"),
+        .package(url: "git@github.com:JohnSundell/ShellOut.git", from: "2.0.0"),
     ],
     targets: [
         .target(
