@@ -23,7 +23,7 @@ NB: This demo is from a 2012 13" MacBook Pro.
 
 1. `$ git clone git@github.com:jesse-c/AppearanceNotifier.git`
 2. `$ swift build --configuration release`.
-3. `$ .build/x86_64-apple-macosx/release/AppearanceNotifier /usr/local/bin/`
+3. `$ mv .build/x86_64-apple-macosx/release/AppearanceNotifier /usr/local/bin/`
 
 ## Usage
 
