@@ -62,7 +62,13 @@ func respond(theme: Theme) {
         DispatchQueue.global().async {
             print("\(Date()) server: updating config")
 
-            let arguments = ["-E", "-i", "\"\"", "\"s/o.background = '[a-z]{4,5}'/o.background = '\(theme.rawValue.lowercased())'/g\"", "~/.config/nvim/lua/ui/init.lua"]
+            let arguments = [
+                "-E",
+                "-i",
+                "''",
+                "s/o.background = \"[a-z]{4,5}\"/o.background = \"\(theme.rawValue.lowercased())\"/g",
+                "~/.config/nvim/lua/user/ui/themes.lua",
+            ]
 
             do {
                 try shellOut(to: "sed", arguments: arguments)
