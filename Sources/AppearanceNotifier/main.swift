@@ -65,8 +65,8 @@ func respond(theme: Theme) {
             let arguments = [
                 "-E",
                 "-i",
-                "''",
-                "s/o.background = \"[a-z]{4,5}\"/o.background = \"\(theme.rawValue.lowercased())\"/g",
+                "\"\"",
+                "\"s/o.background = '[a-z]{4,5}'/o.background = '\(theme.rawValue.lowercased())'/g\"",
                 "~/.config/nvim/lua/user/ui/themes.lua",
             ]
 
@@ -80,7 +80,13 @@ func respond(theme: Theme) {
         DispatchQueue.global().async {
             print("\(Date()) kitty: updating config")
 
-            let arguments = ["-E", "-i", "\"\"", "\"s/edge-[a-z]{4,5}/edge-\(theme.rawValue.lowercased())/g\"", "~/.config/kitty/conf/colours.conf"]
+            let arguments = [
+                "-E",
+                "-i",
+                "\"\"",
+                "\"s/edge-[a-z]{4,5}/edge-\(theme.rawValue.lowercased())/g\"",
+                "~/.config/kitty/conf/colours.conf",
+            ]
 
             do {
                 try shellOut(to: "sed", arguments: arguments)
