@@ -40,12 +40,12 @@ func respond(theme: Theme) {
         let servers = output.split(whereSeparator: \.isNewline)
 
         if servers.isEmpty {
-            print("\(Date()) no servers")
+            print("\(Date()) neovim: no servers")
         } else {
             servers.forEach { server in
                 let server = String(server)
 
-                print("\(Date()) server \(server): sending command")
+                print("\(Date()) neovim server (\(String(server))): sending command")
 
                 let arguments = build_nvim_background_arguments(server: server, theme: theme)
 
@@ -53,14 +53,14 @@ func respond(theme: Theme) {
                     do {
                         try shellOut(to: "nvr", arguments: arguments)
                     } catch {
-                        print("\(Date()) server \(String(server)): command failed")
+                        print("\(Date()) neovim server \(String(server)): command failed")
                     }
                 }
             }
         }
 
         DispatchQueue.global().async {
-            print("\(Date()) server: updating config")
+            print("\(Date()) neovim: updating config")
 
             let arguments = [
                 "-E",
@@ -73,7 +73,7 @@ func respond(theme: Theme) {
             do {
                 try shellOut(to: "sed", arguments: arguments)
             } catch {
-                print("\(Date()) server: config update failed")
+                print("\(Date()) neovim: config update failed")
             }
         }
 
