@@ -66,8 +66,8 @@ func respond(theme: Theme) {
                 "-E",
                 "-i",
                 "\"\"",
-                "\"s/o.background = '[a-z]{4,5}'/o.background = '\(theme.rawValue.lowercased())'/g\"",
-                "~/.config/nvim/lua/user/ui/themes.lua",
+                "\"1s/.*/return '\(theme.rawValue.lowercased())_default'/g\"",
+                "~/.config/nvim/lua/user/ui/theme.lua",
             ]
 
             do {
@@ -84,7 +84,7 @@ func respond(theme: Theme) {
                 "-E",
                 "-i",
                 "\"\"",
-                "\"s/edge-[a-z]{4,5}/edge-\(theme.rawValue.lowercased())/g\"",
+                "\"2s/.*/include ..\\/colours\\/projekt0n\\/github-nvim-theme\\/github_\(theme.rawValue.lowercased())_default.conf/g\"",
                 "~/.config/kitty/conf/colours.conf",
             ]
 
@@ -95,30 +95,15 @@ func respond(theme: Theme) {
             }
         }
 
-        switch theme {
-        case .Light:
-            DispatchQueue.global().async {
-                print("\(Date()) kitty: sending command")
+        DispatchQueue.global().async {
+            print("\(Date()) kitty: sending command")
 
-                let arguments = build_kitty_arguments(theme: "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-light.conf")
+            let arguments = build_kitty_arguments(theme: "~/.config/kitty/colours/projekt0n/github-nvim-theme/github_\(theme.rawValue.lowercased())_default.conf")
 
-                do {
-                    try shellOut(to: "kitty", arguments: arguments)
-                } catch {
-                    print("\(Date()) kitty: command failed")
-                }
-            }
-        case .Dark:
-            DispatchQueue.global().async {
-                print("\(Date()) kitty: sending command")
-
-                let arguments = build_kitty_arguments(theme: "/Users/jesse/.config/kitty/colours/sainnhe/edge/edge-dark.conf")
-
-                do {
-                    try shellOut(to: "kitty", arguments: arguments)
-                } catch {
-                    print("\(Date()) kitty: command failed")
-                }
+            do {
+                try shellOut(to: "kitty", arguments: arguments)
+            } catch {
+                print("\(Date()) kitty: command failed")
             }
         }
     } catch {
@@ -129,7 +114,7 @@ func respond(theme: Theme) {
 }
 
 func build_nvim_background_arguments(server: String, theme: Theme) -> [String] {
-    return ["--servername", server, "+'set background=\(theme.rawValue.lowercased())'"]
+    return ["--servername", server, "+'colorscheme github_\(theme.rawValue.lowercased())_default'"]
 }
 
 func build_kitty_arguments(theme: String) -> [String] {
