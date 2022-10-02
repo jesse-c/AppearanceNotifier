@@ -106,6 +106,18 @@ func respond(theme: Theme) {
                 print("\(Date()) kitty: command failed")
             }
         }
+
+        DispatchQueue.global().async {
+            print("\(Date()) emacs: sending command")
+
+            let arguments = build_emacs_arguments(theme: theme.rawValue.lowercased())
+
+            do {
+                try shellOut(to: "emacs", arguments: arguments)
+            } catch {
+                print("\(Date()) emacs: command failed: \(error)")
+            }
+        }
     } catch {
         let error = error as! ShellOutError
         print(error.message) // Prints STDERR
@@ -120,6 +132,20 @@ func build_nvim_background_arguments(server: String, theme: Theme) -> [String] {
 func build_kitty_arguments(theme: String) -> [String] {
     return [
         "@", "--to", "unix:/tmp/kitty", "set-colors", "--all", "--configured", theme,
+    ]
+}
+
+func build_emacs_arguments(theme: String) -> [String] {
+    return [
+      "emacsclient",
+      "--socket-name",
+      "~/.config/emacs/server/server",
+      "--eval",
+      #""(load-theme 'spacemacs-\#(theme) t)""#,
+      "--quiet",
+      "-no-wait",
+      "--suppress-output",
+        "-a", "true"
     ]
 }
 
