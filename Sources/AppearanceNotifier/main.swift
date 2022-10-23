@@ -137,15 +137,16 @@ func build_kitty_arguments(theme: String) -> [String] {
 
 func build_emacs_arguments(theme: String) -> [String] {
     return [
-      "emacsclient",
-      "--socket-name",
-      "~/.config/emacs/server/server",
-      "--eval",
-      #""(load-theme 'spacemacs-\#(theme) t)""#,
-      "--quiet",
-      "-no-wait",
-      "--suppress-output",
-        "-a", "true"
+        "emacsclient",
+        "--socket-name",
+        "~/.config/emacs/server/server",
+        "--eval",
+        #""(load-theme 'spacemacs-\#(theme) t)""#,
+        "--quiet",
+        "-no-wait",
+        "--suppress-output",
+        "-a",
+        "true",
     ]
 }
 
