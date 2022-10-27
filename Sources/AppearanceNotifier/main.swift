@@ -113,7 +113,7 @@ func respond(theme: Theme) {
             let arguments = build_emacs_arguments(theme: theme.rawValue.lowercased())
 
             do {
-                try shellOut(to: "emacs", arguments: arguments)
+                try shellOut(to: "emacsclient", arguments: arguments)
             } catch {
                 print("\(Date()) emacs: command failed: \(error)")
             }
@@ -137,7 +137,6 @@ func build_kitty_arguments(theme: String) -> [String] {
 
 func build_emacs_arguments(theme: String) -> [String] {
     return [
-        "emacsclient",
         "--socket-name",
         "~/.config/emacs/server/server",
         "--eval",
