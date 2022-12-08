@@ -31,6 +31,10 @@ You'll need to adapt the `respond` function for your local machine's setup.
 
 Run the compiled binary (e.g. `$ AppearanceNotifier`). You'll need to leave this running.
 
+### Autostart
+
+To have it autostart at login, you can use `launchd`, with the provided job definition. Copy it to the right location (e.g. `$ cp com.jesseclaven.appearancenotifier.plist ~/Library/LaunchAgents/`).
+
 ## Dependencies
 
 **Neovim**
