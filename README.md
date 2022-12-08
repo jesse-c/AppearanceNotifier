@@ -73,4 +73,4 @@ You'll need to have the server running.
 
 Q. What if my laptop is asleep and it passes sunrise/sunset?
 
-A. From what I've observed, my laptop has already switched, or does so immediately after I directly wake it up.
+A. From what I've observed, my laptop has already switched, or does so immediately, after I directly wake it up.
