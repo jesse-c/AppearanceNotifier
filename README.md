@@ -61,6 +61,10 @@ NB: If you don't open kitty directly from the application (for example, if you'r
 
 NB: I haven't tested this with more than 1 kitty window.
 
+**Emacs**
+
+You'll need to have the server running.
+
 ## FAQ
 
 Q. What if my laptop is asleep and it passes sunrise/sunset?
