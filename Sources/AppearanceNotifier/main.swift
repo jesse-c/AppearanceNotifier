@@ -4,8 +4,9 @@ import ShellOut
 
 private let kAppleInterfaceThemeChangedNotification = "AppleInterfaceThemeChangedNotification"
 
-enum Theme: String {
-    case Light, Dark
+enum Theme {
+    case light
+    case dark
 }
 
 class ThemeChangeObserver {
@@ -22,12 +23,26 @@ class ThemeChangeObserver {
 
     func interfaceModeChanged(notification _: Notification) {
         let themeRaw = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") ?? "Light"
-        let theme = Theme(rawValue: themeRaw)!
+
+        let theme = notificationToTheme(themeRaw: themeRaw)!
 
         notify(theme: theme)
 
         respond(theme: theme)
     }
+}
+
+func notificationToTheme(themeRaw: String) -> Theme? {
+    return {
+        switch themeRaw {
+        case "Light":
+            return Theme.light
+        case "Dark":
+            return Theme.dark
+        default:
+            return nil
+        }
+    }()
 }
 
 func notify(theme: Theme) {
@@ -47,7 +62,7 @@ func respond(theme: Theme) {
 
                 print("\(Date()) neovim server (\(String(server))): sending command")
 
-                let arguments = build_nvim_background_arguments(server: server, theme: theme)
+                let arguments = buildNvimBackgroundArguments(server: server, theme: theme)
 
                 DispatchQueue.global().async {
                     do {
@@ -66,7 +81,7 @@ func respond(theme: Theme) {
                 "-E",
                 "-i",
                 "\"\"",
-                "\"1s/.*/return '\(theme.rawValue.lowercased())_default'/g\"",
+                "\"1s/.*/return '\(toKebabCase(sentence: themeToModusTheme(theme: theme)))'/g\"",
                 "~/.config/nvim/lua/user/ui/theme.lua",
             ]
 
@@ -84,7 +99,7 @@ func respond(theme: Theme) {
                 "-E",
                 "-i",
                 "\"\"",
-                "\"2s/.*/include ..\\/colours\\/projekt0n\\/github-nvim-theme\\/github_\(theme.rawValue.lowercased())_default.conf/g\"",
+                "\"2s/.*/include ..\\/colours\\/kovidgoyal\\/kitty-themes\\/\(toSnakeCase(sentence: themeToModusTheme(theme: theme))).conf/g\"",
                 "~/.config/kitty/conf/colours.conf",
             ]
 
@@ -98,7 +113,7 @@ func respond(theme: Theme) {
         DispatchQueue.global().async {
             print("\(Date()) kitty: sending command")
 
-            let arguments = build_kitty_arguments(theme: "~/.config/kitty/colours/projekt0n/github-nvim-theme/github_\(theme.rawValue.lowercased())_default.conf")
+            let arguments = buildKittyArguments(theme: "~/.config/kitty/colours/kovidgoyal/kitty-themes/\(toSnakeCase(sentence: themeToModusTheme(theme: theme))).conf")
 
             do {
                 try shellOut(to: "kitty", arguments: arguments)
@@ -110,7 +125,7 @@ func respond(theme: Theme) {
         DispatchQueue.global().async {
             print("\(Date()) emacs: sending command")
 
-            let arguments = build_emacs_arguments(theme: theme.rawValue.lowercased())
+            let arguments = buildEmacsArguments(theme: theme)
 
             do {
                 try shellOut(to: "emacsclient", arguments: arguments)
@@ -125,28 +140,51 @@ func respond(theme: Theme) {
     }
 }
 
-func build_nvim_background_arguments(server: String, theme: Theme) -> [String] {
-    return ["--servername", server, "+'colorscheme github_\(theme.rawValue.lowercased())_default'"]
+func buildNvimBackgroundArguments(server: String, theme: Theme) -> [String] {
+    return ["--servername", server, "+'colorscheme \(toKebabCase(sentence: themeToModusTheme(theme: theme)))'"]
 }
 
-func build_kitty_arguments(theme: String) -> [String] {
+func buildKittyArguments(theme: String) -> [String] {
     return [
         "@", "--to", "unix:/tmp/kitty", "set-colors", "--all", "--configured", theme,
     ]
 }
 
-func build_emacs_arguments(theme: String) -> [String] {
+func buildEmacsArguments(theme: Theme) -> [String] {
     return [
         "--socket-name",
         "~/.config/emacs/server/server",
         "--eval",
-        #""(load-theme 'spacemacs-\#(theme) t)""#,
+        #""(load-theme '\#(toKebabCase(sentence: themeToModusTheme(theme: theme))) t)""#,
         "--quiet",
         "-no-wait",
         "--suppress-output",
         "-a",
         "true",
     ]
+}
+
+func themeToModusTheme(theme: Theme) -> String {
+    return {
+        switch theme {
+        case .light:
+            return "Modus Operandi"
+        case .dark:
+            return "Modus Vivendi"
+        }
+    }()
+}
+
+func toSnakeCase(sentence: String) -> String {
+    let lowercaseSentence = sentence.lowercased()
+
+    return lowercaseSentence.replacingOccurrences(of: " ", with: "_")
+}
+
+func toKebabCase(sentence: String) -> String {
+    let lowercaseSentence = sentence.lowercased()
+
+    return lowercaseSentence.replacingOccurrences(of: " ", with: "-")
 }
 
 let app = NSApplication.shared
