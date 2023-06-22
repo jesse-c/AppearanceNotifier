@@ -81,7 +81,7 @@ func respond(theme: Theme) {
                 "-E",
                 "-i",
                 "\"\"",
-                "\"1s/.*/return '\(toKebabCase(sentence: themeToModusTheme(theme: theme)))'/g\"",
+                "\"1s/.*/return 'catppuccin-\(themeToCatppuccinTheme(theme: theme))'/g\"",
                 "~/.config/nvim/lua/user/ui/theme.lua",
             ]
 
@@ -99,7 +99,7 @@ func respond(theme: Theme) {
                 "-E",
                 "-i",
                 "\"\"",
-                "\"2s/.*/include ..\\/colours\\/kovidgoyal\\/kitty-themes\\/\(toSnakeCase(sentence: themeToModusTheme(theme: theme))).conf/g\"",
+                "\"2s/.*/include ..\\/colours\\/catppuccin\\/kitty\\/\(themeToCatppuccinTheme(theme: theme)).conf/g\"",
                 "~/.config/kitty/conf/colours.conf",
             ]
 
@@ -113,7 +113,7 @@ func respond(theme: Theme) {
         DispatchQueue.global().async {
             print("\(Date()) kitty: sending command")
 
-            let arguments = buildKittyArguments(theme: "~/.config/kitty/colours/kovidgoyal/kitty-themes/\(toSnakeCase(sentence: themeToModusTheme(theme: theme))).conf")
+            let arguments = buildKittyArguments(theme: "~/.config/kitty/colours/catppuccin/kitty/\(themeToCatppuccinTheme(theme: theme)).conf")
 
             do {
                 try shellOut(to: "kitty", arguments: arguments)
@@ -126,6 +126,7 @@ func respond(theme: Theme) {
             print("\(Date()) emacs: sending command")
 
             let arguments = buildEmacsArguments(theme: theme)
+            print(arguments)
 
             do {
                 try shellOut(to: "emacsclient", arguments: arguments)
@@ -141,7 +142,7 @@ func respond(theme: Theme) {
 }
 
 func buildNvimBackgroundArguments(server: String, theme: Theme) -> [String] {
-    return ["--servername", server, "+'colorscheme \(toKebabCase(sentence: themeToModusTheme(theme: theme)))'"]
+    return ["--servername", server, "+'colorscheme catppuccin-\(themeToCatppuccinTheme(theme: theme))'"]
 }
 
 func buildKittyArguments(theme: String) -> [String] {
@@ -155,7 +156,7 @@ func buildEmacsArguments(theme: Theme) -> [String] {
         "--socket-name",
         "~/.config/emacs/server/server",
         "--eval",
-        #""(load-theme '\#(toKebabCase(sentence: themeToModusTheme(theme: theme))) t)""#,
+        #""(progn (setq catppuccin-flavor '\#(themeToCatppuccinTheme(theme: theme))) (catppuccin-reload))""#,
         "--quiet",
         "-no-wait",
         "--suppress-output",
@@ -164,13 +165,13 @@ func buildEmacsArguments(theme: Theme) -> [String] {
     ]
 }
 
-func themeToModusTheme(theme: Theme) -> String {
+func themeToCatppuccinTheme(theme: Theme) -> String {
     return {
         switch theme {
         case .light:
-            return "Modus Operandi"
+            return "latte"
         case .dark:
-            return "Modus Vivendi"
+            return "mocha"
         }
     }()
 }
