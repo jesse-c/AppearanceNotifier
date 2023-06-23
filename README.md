@@ -39,7 +39,7 @@ To have it autostart at login, you can use `launchd`, with the provided job defi
 
 **Neovim**
 
-[nvim-remote](https://github.com/mhinz/neovim-remote) is used for controlling the Neovim instances.
+[nvim-remote](https://github.com/mhinz/neovim-remote) (aka `nvr`) is used for controlling the Neovim instances.
 
 **kitty**
 
