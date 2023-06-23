@@ -81,8 +81,9 @@ func respond(theme: Theme) {
             let arguments = [
                 "-E",
                 "-i",
-                "\"\"",
-                "\"1s/.*/return 'catppuccin-\(themeToCatppuccinTheme(theme: theme))'/g\"",
+                // Don't create a backfup file
+                "''",
+                "s/catppuccin-[a-z]*/catppuccin-\(themeToCatppuccinTheme(theme: theme))/g",
                 "~/.config/nvim/lua/user/ui/theme.lua",
             ]
 
