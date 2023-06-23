@@ -51,6 +51,7 @@ func notify(theme: Theme) {
 
 func respond(theme: Theme) {
     do {
+        // Neovim ---------------------------------------------------------------
         let output = try shellOut(to: "nvr", arguments: ["--serverlist"])
         let servers = output.split(whereSeparator: \.isNewline)
 
@@ -92,6 +93,7 @@ func respond(theme: Theme) {
             }
         }
 
+        // Kitty ----------------------------------------------------------------
         DispatchQueue.global().async {
             print("\(Date()) kitty: updating config")
 
@@ -122,16 +124,38 @@ func respond(theme: Theme) {
             }
         }
 
+        // Helix ----------------------------------------------------------------
         DispatchQueue.global().async {
-            print("\(Date()) emacs: sending command")
+            print("\(Date()) helix: updating config")
 
-            let arguments = buildEmacsArguments(theme: theme)
+            let arguments = [
+                "-E",
+                "-i",
+                // Don't create a backfup file
+                "''",
+                "s/catppuccin_[a-z]*/catppuccin_\(themeToCatppuccinTheme(theme: theme))/g",
+                "~/.config/helix/config.toml",
+            ]
             print(arguments)
 
             do {
-                try shellOut(to: "emacsclient", arguments: arguments)
+                try shellOut(to: "sed", arguments: arguments)
             } catch {
-                print("\(Date()) emacs: command failed: \(error)")
+                print("\(Date()) helix: config update failed")
+            }
+
+            // Emacs ----------------------------------------------------------------
+            DispatchQueue.global().async {
+                print("\(Date()) emacs: sending command")
+
+                let arguments = buildEmacsArguments(theme: theme)
+                print(arguments)
+
+                do {
+                    try shellOut(to: "emacsclient", arguments: arguments)
+                } catch {
+                    print("\(Date()) emacs: command failed: \(error)")
+                }
             }
         }
     } catch {
