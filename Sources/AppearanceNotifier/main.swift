@@ -137,7 +137,6 @@ func respond(theme: Theme) {
                 "s/catppuccin_[a-z]*/catppuccin_\(themeToCatppuccinTheme(theme: theme))/g",
                 "~/.config/helix/config.toml",
             ]
-            print(arguments)
 
             do {
                 try shellOut(to: "sed", arguments: arguments)
@@ -181,7 +180,7 @@ func buildEmacsArguments(theme: Theme) -> [String] {
         "--socket-name",
         "~/.config/emacs/server/server",
         "--eval",
-        #""(progn (setq catppuccin-flavor '\#(themeToCatppuccinTheme(theme: theme))) (catppuccin-reload))""#,
+        #""(my/catppuccin-set-and-reload '\#(themeToCatppuccinTheme(theme: theme)))""#,
         "--quiet",
         "-no-wait",
         "--suppress-output",
