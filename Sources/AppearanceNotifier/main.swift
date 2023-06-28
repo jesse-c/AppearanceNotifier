@@ -146,6 +146,18 @@ func respond(theme: Theme) {
         }
 
         DispatchQueue.global().async {
+            print("\(Date()) helix: reloading config")
+
+            let arguments = ["-USR1", "hx"]
+
+            do {
+                try shellOut(to: "pkill", arguments: arguments)
+            } catch {
+                print("\(Date()) helix: config reloadg failed")
+            }
+        }
+
+        DispatchQueue.global().async {
             // Emacs ----------------------------------------------------------------
             DispatchQueue.global().async {
                 print("\(Date()) emacs: sending command")
