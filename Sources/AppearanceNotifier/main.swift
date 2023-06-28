@@ -143,7 +143,9 @@ func respond(theme: Theme) {
             } catch {
                 print("\(Date()) helix: config update failed")
             }
+        }
 
+        DispatchQueue.global().async {
             // Emacs ----------------------------------------------------------------
             DispatchQueue.global().async {
                 print("\(Date()) emacs: sending command")
