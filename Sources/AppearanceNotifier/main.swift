@@ -163,7 +163,6 @@ func respond(theme: Theme) {
                 print("\(Date()) emacs: sending command")
 
                 let arguments = buildEmacsArguments(theme: theme)
-                print(arguments)
 
                 do {
                     try shellOut(to: "emacsclient", arguments: arguments)
