@@ -96,27 +96,9 @@ func respond(theme: Theme) {
 
         // Kitty ----------------------------------------------------------------
         DispatchQueue.global().async {
-            print("\(Date()) kitty: updating config")
-
-            let arguments = [
-                "-E",
-                "-i",
-                "\"\"",
-                "\"2s/.*/include ..\\/colours\\/catppuccin\\/kitty\\/\(themeToCatppuccinTheme(theme: theme)).conf/g\"",
-                "~/.config/kitty/conf/colours.conf",
-            ]
-
-            do {
-                try shellOut(to: "sed", arguments: arguments)
-            } catch {
-                print("\(Date()) kitty: config update failed")
-            }
-        }
-
-        DispatchQueue.global().async {
             print("\(Date()) kitty: sending command")
 
-            let arguments = buildKittyArguments(theme: "~/.config/kitty/colours/catppuccin/kitty/\(themeToCatppuccinTheme(theme: theme)).conf")
+            let arguments = buildKittyArguments(theme: theme)
 
             do {
                 try shellOut(to: "kitty", arguments: arguments)
@@ -182,9 +164,13 @@ func buildNvimBackgroundArguments(server: String, theme: Theme) -> [String] {
     return ["--servername", server, "+'colorscheme catppuccin-\(themeToCatppuccinTheme(theme: theme))'"]
 }
 
-func buildKittyArguments(theme: String) -> [String] {
+func buildKittyArguments(theme: Theme) -> [String] {
     return [
-        "@", "--to", "unix:/tmp/kitty", "set-colors", "--all", "--configured", theme,
+        "kitty",
+        "+kitten",
+        "themes",
+        "--reload-in=all",
+        "Catppuccin-\(themeToCatppuccinTheme(theme: theme).capitalized)",
     ]
 }
 
