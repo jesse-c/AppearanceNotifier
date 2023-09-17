@@ -135,7 +135,7 @@ func respond(theme: Theme) {
             do {
                 try shellOut(to: "pkill", arguments: arguments)
             } catch {
-                print("\(Date()) helix: config reloadg failed")
+                print("\(Date()) helix: config reload failed")
             }
         }
 
