@@ -170,6 +170,8 @@ func buildKittyArguments(theme: Theme) -> [String] {
         "+kitten",
         "themes",
         "--reload-in=all",
+        "--config-file-name",
+        "themes.conf",
         "Catppuccin-\(themeToCatppuccinTheme(theme: theme).capitalized)",
     ]
 }
