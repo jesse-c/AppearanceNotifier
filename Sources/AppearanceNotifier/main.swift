@@ -166,7 +166,6 @@ func buildNvimBackgroundArguments(server: String, theme: Theme) -> [String] {
 
 func buildKittyArguments(theme: Theme) -> [String] {
     return [
-        "kitty",
         "+kitten",
         "themes",
         "--reload-in=all",
