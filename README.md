@@ -69,6 +69,10 @@ NB: I haven't tested this with more than 1 kitty window.
 
 You'll need to have the server running.
 
+**Helix**
+
+No specific setup is needed.
+
 ## FAQ
 
 Q. What if my laptop is asleep and it passes sunrise/sunset?
