@@ -6,6 +6,10 @@ This application listens for when the macOS interface theme changes and then _do
 
 Ideally the different things themselves would handle this themselves, as others do.
 
+Alternative:
+
+Use HammerSpoon and hook into the same event. For example: https://github.com/jesse-c/dotfiles/commit/1f0e4d1be732f3397ed9f9d892fe71890fbcc2d2.
+
 ## Demo
 
 ![appearancenotifier-demo-with-kitty-neovim](https://user-images.githubusercontent.com/1405676/121757359-d2b42700-cb0c-11eb-8db1-47d91aa5196c.gif)
